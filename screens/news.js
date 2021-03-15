@@ -1,5 +1,8 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity} from 'react-native'
+
+import {useSelector, useDispatch} from 'react-redux'
+import {newsGetRequest} from '../redux/actionCreator'
 
 const DATA = [
     {
@@ -57,6 +60,15 @@ const DATA = [
 
 export default function News({navigation}){
     const [selectedId, setSelectedId] = useState()
+
+    
+    const dispatch = useDispatch()
+    const selector = useSelector((state)=> state)
+    useEffect(()=>{
+      dispatch(newsGetRequest())
+      console.log("SELECTOR: ", selector)
+    },[dispatch])
+
 
     const onSelected = (item)=>{
       console.log("ID: ",item.id)
