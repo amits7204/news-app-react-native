@@ -15,7 +15,7 @@ function* fetchNews(){
 }
 
 function* watchGetNews(){
-    yield takeEvery(NEWS_GET_REQUEST, fetchNews)
+    yield takeLatest(NEWS_GET_REQUEST, fetchNews)
 }
 
 const newsSaga = [fork(watchGetNews)]

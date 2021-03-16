@@ -1,82 +1,39 @@
 import React, {useState, useEffect} from 'react'
-import {SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity} from 'react-native'
+import {SafeAreaView, View, FlatList, StyleSheet, Text, Image, StatusBar, TouchableOpacity} from 'react-native'
 
 import {useSelector, useDispatch} from 'react-redux'
 import {newsGetRequest} from '../redux/actionCreator'
 
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-      name: "Amit Singh"
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-      name: 'Singh'
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-      name: 'Rahul'
-    },
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb36ba',
-      title: 'Fourth Item',
-      name: 'Kumar'
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa327f63',
-      title: 'fifth Item',
-      name: 'Deepak'
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e563d72',
-      title: 'sixth Item',
-      name: 'sunil'
-    },
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad43abb36ba',
-      title: 'seven Item',
-      name: 'jai'
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd421aa327f63',
-      title: 'eight Item',
-      name: 'karan'
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145541e563d72',
-      title: 'nine Item',
-      name: 'arjun'
-    },
-  ];
-
-  const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
-      <Text style={styles.title}>{item.title}</Text>
-    </TouchableOpacity>
-  );
+  
 
 export default function News({navigation}){
     const [selectedId, setSelectedId] = useState()
 
     
     const dispatch = useDispatch()
-    const selector = useSelector((state)=> state)
+    const {isLoading, allData} = useSelector((state)=> state.reducer)
+    console.log("SELECTOR: ", allData.articles)
     useEffect(()=>{
       dispatch(newsGetRequest())
-      console.log("SELECTOR: ", selector)
+      // console.log("SELECTOR: ", selector)
     },[dispatch])
 
-
+    const Item = ({ item, onPress, style }) => (
+      // <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
+      <View onPress={onPress} style={[styles.item, style]}>
+        <Image resizeMode='cover' source={{uri: item.urlToImage}} style={styles.urlImage}/>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.newsDesc}>{item.description}</Text>
+      </View>
+      // </TouchableOpacity>
+    );
     const onSelected = (item)=>{
       console.log("ID: ",item.id)
       navigation.navigate('descriptions', item.name)
     }
 
     const renderItem = ({ item }) => {
-      const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
+      const backgroundColor = item.title === selectedId ? "#f9c2ff" : "#FFFFFF";
       return(
         <Item
           item={item}
@@ -88,9 +45,9 @@ export default function News({navigation}){
     return(
         <SafeAreaView style={styles.container}>
             <FlatList
-                data={DATA}
+                data={allData.articles}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.title}
                 extraData={selectedId}
             />
         </SafeAreaView>
@@ -100,18 +57,33 @@ export default function News({navigation}){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
+        // marginTop: StatusBar.currentHeight || 0,
         width: '100%',
         
     },
     item: {
         backgroundColor: '#f9c2ff',
-        padding: 20,
         marginVertical: 8,
-        marginHorizontal: 16,
+        marginHorizontal: 8,
         borderRadius: 16,
+        paddingBottom: 20
     },
     title: {
-        fontSize: 32,
+        fontSize: 18,
+        margin: 6,
+        color: "#000000",
+        fontWeight: 'bold'
+
   },
+  urlImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 16,
+  }, 
+  newsDesc: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: "#000000",
+    margin: 6
+  }
 })

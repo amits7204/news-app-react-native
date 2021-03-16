@@ -2,19 +2,20 @@ import {NEWS_GET_REQUEST,
     NEWS_GET_SUCCESS,
     NEWS_GET_FAILURE} from '../redux/actionType'
 
-export const initState = {
-    // allData: [],
+const initState = {
+    allData: [],
     isLoading: true
 }    
 const newsReducer = (state=initState, {type, payload})=>{
     console.log("Reducer Payload: ", payload)
     switch(type){
         case NEWS_GET_REQUEST:
+            console.log("REQUEST:")
             return {
                 ...state,
             }
         case NEWS_GET_SUCCESS:
-            console.log("Success:", payload)
+            console.log("Success:")
             return{
                 ...state,
                 allData: payload,
